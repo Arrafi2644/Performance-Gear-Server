@@ -60,6 +60,29 @@ async function run() {
         res.send(result)
     })
 
+    app.put('/equipments/:id', async(req, res) => {
+        const id = req.params.id;
+        const filter = {_id : new ObjectId(id)}
+        const options = {upsert: true}
+        const updatedEquipment = req.body;
+        const equipment = {
+            $set: {
+                name: updatedEquipment.name,
+                category: updatedEquipment.category,
+                price: updatedEquipment.price,
+                available: updatedEquipment.available,
+                description: updatedEquipment.description,
+                image: updatedEquipment.image,
+                customization: updatedEquipment.customization,
+                deliveryTime: updatedEquipment.deliveryTime,
+                rating: updatedEquipment.rating,
+            }
+        }
+
+        const result = await equipmentCollection.updateOne(filter, equipment, options)
+        res.send(result)
+    })
+
     app.delete("/equipments/:id", async(req, res) => {
         const id = req.params.id;
         console.log(id);
