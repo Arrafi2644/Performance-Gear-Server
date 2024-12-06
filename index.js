@@ -52,6 +52,14 @@ async function run() {
 
     })
 
+    app.get("/equipments/category/:category", async(req, res) => {
+        const category = req.params.category;
+        const filter = {category}
+        const cursor =  equipmentCollection.find(filter)
+        const result = await cursor.toArray()
+        res.send(result); 
+    })
+
     app.post("/equipments", async(req, res) => {
         const equipment = req.body;
         console.log(equipment);
