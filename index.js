@@ -29,9 +29,14 @@ async function run() {
       // Connect the client to the server	(optional starting in v4.7)
     //   await client.connect();
 
+    app.get("/allEquipments", async(req, res) => {
+        const cursor = equipmentCollection.find()
+        const result = await cursor.toArray()
+        res.send(result)
+    })
 
     app.get("/equipments", async(req, res) => {
-        const cursor = equipmentCollection.find()
+        const cursor = equipmentCollection.find().limit(6)
         const result = await cursor.toArray()
         res.send(result)
     })
@@ -52,7 +57,7 @@ async function run() {
 
     })
 
-    app.get("/equipments/category/:category", async(req, res) => {
+    app.get("/allEquipments/category/:category", async(req, res) => {
         const category = req.params.category;
         const filter = {category}
         const cursor =  equipmentCollection.find(filter)
