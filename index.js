@@ -22,6 +22,8 @@ const client = new MongoClient(uri, {
 });
 
 const equipmentCollection = client.db("sportsEquipmentDB").collection("equipment")
+const equipmentCartCollection = client.db("sportsEquipmentDB").collection("carts")
+
 
 async function run() {
   try {
@@ -36,7 +38,7 @@ async function run() {
     })
 
     app.get("/equipments", async(req, res) => {
-        const cursor = equipmentCollection.find().limit(6)
+        const cursor = equipmentCollection.find().limit(8)
         const result = await cursor.toArray()
         res.send(result)
     })
@@ -84,6 +86,7 @@ async function run() {
                 category: updatedEquipment.category,
                 price: updatedEquipment.price,
                 available: updatedEquipment.available,
+                shortDescription: updatedEquipment.shortDescription,
                 description: updatedEquipment.description,
                 image: updatedEquipment.image,
                 customization: updatedEquipment.customization,
@@ -102,6 +105,27 @@ async function run() {
         const query = {_id : new ObjectId(id)}
         const result = await equipmentCollection.deleteOne(query)
         res.send(result);
+    })
+
+    app.get('/carts/:email', async(req, res) => {
+        const email = req.body.email;
+        const query = {email : email}
+        const cursor = equipmentCartCollection.find(query)
+        const result = await cursor.toArray()
+        res.send(result)
+    })
+
+    app.post('/carts', async(req, res) => {
+        const product = req.body;
+        const result = await equipmentCartCollection.insertOne(product);
+        res.send(result)
+    })
+
+    app.delete('/carts/:id', async(req, res)=>{
+        const id = req.params.id;
+        const query = {_id : new ObjectId(id)}
+        const result = await equipmentCartCollection.deleteOne(query)
+        res.send(result)
     })
 
 
